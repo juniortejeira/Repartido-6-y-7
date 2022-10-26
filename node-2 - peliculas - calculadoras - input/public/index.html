@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <form action="suscripcion" method="POST">
+        <input type="text" name="usuario" >
+        <input type="text" name="contraña">
+        <button>Enviar Suscripcion</button>
+    </form>
+    
+    <form method="POST">
+        <div>
+            
+            <h1 class="h1">Calculadora</h1>
+            <input type="number" name="numero">n1</input>
+            <input type="number" name="numero2">n2</input>
+            <button type="submit" name="enviarForm1">Enviar</button>
+            
+            <select name="accion" class="selectAccion" id="slecetAccion">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="multiplicacion">*</option>
+                <option value="dividir">/</option>
+           
+            </select>
+        </div>
+    </form>
+
+    <!-- accion="/complejo", lo usamos para que entienda html a que pagina enviar el formulario y en express creamos la ruta /complejo -->
+    <form action="/complejo" method="POST">
+        <div>
+        
+            <input type="number" name="num1">peso</input>
+            <input type="number" name="num2">cm</input>
+            <button type="submit" name="enviarForm2">Enviar IMC</button>
+            
+            <select name="accionCompleja">
+                <option value="imc">IMC</option>
+            </select>
+        </div>
+    </form>    
+        
+
+    <tbody id="datosIndex"></tbody>
+    <div class="contenedor" id="contenedor"></div><!-- esto es de peliculas, para guardar el contenido-->
+
+
+
+    <div class="contenedor" id="contenedor"><div> 
+
+
+        <div class="paginacion">
+            <button id="btnAnterior">Anterior</button>
+            <button id="btnSiguiente">Siguiente</button>
+        </div>
+
+
+
+<!--  ==========================   Js  ============================================== -->
+<script>
+
+    //========================codigo robado(video)===========================
+    let pagina = 1;
+    const btnAnterior = document.getElementById('btnAnterior');
+    const btnSiguiente = document.getElementById('btnSiguiente');
+
+    btnSiguiente.addEventListener('click', () => {
+        if(pagina < 1000){
+            pagina += 1;
+            cargarPeliculas();
+        }
+    });
+
+    btnAnterior.addEventListener('click', () => {
+        if(pagina > 1){
+            pagina -= 1;
+            cargarPeliculas();
+        }
+    });
+
+
+    //=====================renderizar api================================//
+
+
+    const localhost = "http://localhost:3080/usuario"//estamos solicitando al servidor
+
+    async function cargarPeliculas(){
+        const urlDatos = await fetch(localhost)
+        let datos =  await urlDatos.json() 
+        let peliculas = '';
+        console.log(datos)
+       
+        datos.results.forEach(pelicula => {
+                    peliculas += `
+                  
+                        <div class="pelicula">
+                            <img class="poster" src="https://image.tmdb.org/t/p/w500/${pelicula.poster_path}">
+                            <h3 class="titulo">${pelicula.title}</h3>
+                        </div>
+                       
+                    `;
+                });
+                 //document.body.innerHTML+=peliculas;//necesitamos ingresar al html y sumar la funcion de peliculas
+                 document.getElementById('contenedor').innerHTML = peliculas;
+    
+            /* datos.results.forEach(peliculas => {
+                const img = document.createElement("img");
+                img.src=`https://image.tmdb.org/t/p/w500/${peliculas.poster_path}`;
+                document.body.append(img)
+            })   */ 
+
+      } 
+
+      
+    cargarPeliculas();
+
+
+
+
+    
+</script>    
+</body>
+
+</html>
